@@ -8,19 +8,34 @@ use PHPUnit\Framework\TestCase;
 
 class PLTest extends TestCase
 {
-    private static string $outputDir = '/home/mamont/Projects/tmp';
+    private static string $outputDir = __DIR__;
 
-    public function testLoadingOnly(): void
+    /*public function testFuncPLWithoutNet(): void
     {
-        $testLoadingResult = page_loader('https://ru.hexlet.io/courses', static::$outputDir);
-        $this->assertEquals(static::$outputDir . '/ru-hexlet-io-courses.html', $testLoadingResult);
-    }
-    /*public function testBlackBox(): void
-    {
-        $testLoadingResult = page_loader('https://ru.hexlet.io/courses');
-        $this->assertEquals(static::$testReturn, $testLoadingResult);
-        $this->ParseJsonTestResult = getAssocArrayFromFile(__DIR__ . '/fixtures/file1.json');
-        $this->expectOutputString(static::$parseFileRightResult);
-        print_r($this->ParseJsonTestResult);
+        $stub = $this->createMock(\GuzzleHttp\Client::class);
+        $stub->method('get')
+            ->method('getBody')
+            ->method('getContents')
+            ->willReturn('bla-bla-bla');
+        $this->assertSame(
+        static::$outputDir .
+         '/ru-hexlet-io-courses.html', page_loader('https://ru.hexlet.io/courses')
+        );
     }*/
+    public function testFuncPLWithNet(): void
+    {
+        $tryLoad = page_loader('https://ru.hexlet.io/courses', static::$outputDir);
+        $this->assertEquals(static::$outputDir . '/ru-hexlet-io-courses.html', $tryLoad);
+    }
+    public function testBlackBox(): void
+    {
+        $expRes = "\nPage was successfully downloaded into " .
+            static::$outputDir .
+            "/ru-hexlet-io-courses.html\n";
+        $tryLoad = shell_exec(
+            __DIR__ . '/../bin/page-loader https://ru.hexlet.io/courses -o ' .
+            static::$outputDir
+        );
+        $this->assertEquals($expRes, $tryLoad);
+    }
 }
