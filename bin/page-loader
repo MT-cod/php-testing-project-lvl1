@@ -1,0 +1,37 @@
+#!/usr/bin/env php
+<?php
+
+namespace PL;
+
+$autoloadPath1 = __DIR__ . '/../../../autoload.php';
+$autoloadPath2 = __DIR__ . '/../vendor/autoload.php';
+if (file_exists($autoloadPath1)) {
+    require_once $autoloadPath1;
+} else {
+    require_once $autoloadPath2;
+}
+
+$doc = <<<'DOCOPT'
+Downloads page from URL and save it locally                                                              
+                                                                                                         
+Usage:                                                                                                   
+    page-loader (-h|--help)                                                                              
+    page-loader [--output <dir>] <url>                                                                   
+    page-loader (-v|--version)                                                                           
+                                                                                                         
+Options:                                                                                                 
+  -h --help            display help for command                                                          
+  -v --version         output the version number                                                         
+  -o --output <dir>    output dir
+
+DOCOPT;
+
+$startingParams = \Docopt::handle($doc, array('version'=>'v0.0.1'));
+
+$url = $startingParams['<url>'];
+
+//['--output'] - директория вывода результата работы page-loader по Docopt-у
+//если не задан, то подставляем директорию запуска программы
+$outputDir = $startingParams['--output'] ?? __DIR__;
+
+echo("\nPage was successfully downloaded into " . page_loader($url, $outputDir) . "\n");
