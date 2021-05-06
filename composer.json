@@ -2,7 +2,7 @@
     "name": "mt-cod/php-testing-project-lvl1",
     "version": "v0.1.0",
     "description": "hexlet php-package",
-    "minimum-stability: dev",
+    "minimum-stability": "dev",
     "require": {
         "docopt/docopt": "^1.0",
         "guzzlehttp/guzzle": "^7.3"
