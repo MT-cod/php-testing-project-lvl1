@@ -1,6 +1,6 @@
 {
     "name": "mt-cod/php-testing-project-lvl1",
-    "version": "v0.1.0",
+    "version": "v1.1.0",
     "description": "hexlet php-package",
     "minimum-stability": "dev",
     "require": {
