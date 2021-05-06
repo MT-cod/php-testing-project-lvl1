@@ -30,12 +30,12 @@ class PLTest extends TestCase
     public function testBlackBox(): void
     {
         $expRes = "\nPage was successfully downloaded into " .
-            static::$outputDir .
-            "/ru-hexlet-io-courses.html\n";
-        $tryLoad = shell_exec(
-            __DIR__ . '/../bin/page-loader https://ru.hexlet.io/courses -o ' .
-            static::$outputDir
-        );
+            getcwd() .
+            "/bin/ru-hexlet-io-courses.html\n";
+        /*var_dump(getcwd());
+        echo(chdir('..'));
+        var_dump(getcwd());*/
+        $tryLoad = shell_exec(getcwd() . '/bin/page-loader https://ru.hexlet.io/courses');
         $this->assertEquals($expRes, $tryLoad);
     }
 }
