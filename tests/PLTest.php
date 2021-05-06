@@ -19,12 +19,12 @@ class PLTest extends TestCase
             ->willReturn('bla-bla-bla');
         $this->assertSame(
         static::$outputDir .
-         '/ru-hexlet-io-courses.html', page_loader('https://ru.hexlet.io/courses')
+         '/ru-hexlet-io-courses.html', pageLoader('https://ru.hexlet.io/courses')
         );
     }*/
     public function testFuncPLWithNet(): void
     {
-        $tryLoad = page_loader('https://ru.hexlet.io/courses', static::$outputDir);
+        $tryLoad = pageLoader('https://ru.hexlet.io/courses', static::$outputDir);
         $this->assertEquals(static::$outputDir . '/ru-hexlet-io-courses.html', $tryLoad);
     }
     /*public function testBlackBox(): void

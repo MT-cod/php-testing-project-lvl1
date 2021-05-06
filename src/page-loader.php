@@ -3,7 +3,7 @@
 namespace PL;
 
 //Головная функция
-function page_loader(string $url, string $outputDir, string $clientClass = ''): string
+function pageLoader(string $url, string $outputDir, string $clientClass = ''): string
 {
     $html = getHtml($url);
     $outputFileName = genName($url);
