@@ -6,3 +6,5 @@
 [![Issue Count](https://codeclimate.com/github/MT-cod/php-testing-project-lvl1/badges/issue_count.svg)](https://codeclimate.com/github/MT-cod/php-testing-project-lvl1/issues)
 [![Test Coverage](https://codeclimate.com/github/MT-cod/php-testing-project-lvl1/badges/coverage.svg)](https://codeclimate.com/github/MT-cod/php-testing-project-lvl1/coverage)
 <br>
+<a href="https://asciinema.org/a/bTcfN43EkeFPNEm6zdZtNpKH1">Скачивание страницы - asciinema</a>
+<br>
