@@ -10,6 +10,29 @@ class PLTest extends TestCase
 {
     private static string $outputDir = __DIR__;
 
+    public function testFuncPLWithNet(): void
+    {
+        $tryLoad = pageLoader('https://ru.hexlet.io/courses', static::$outputDir);
+        $this->assertEquals(static::$outputDir . '/ru-hexlet-io-courses.html', $tryLoad);
+
+        $this->assertFileExists(static::$outputDir . '/ru-hexlet-io-courses_files');
+        $this->assertFileExists(
+            static::$outputDir .
+            '/ru-hexlet-io-courses_files/' .
+            'cdn2-hexlet-io-assets-' .
+            'hexlet_logo-e99fc2b3b7c1eec88899f3af1435a39aaac6fd29d011dfe2342499c0884b7a96.png'
+        );
+        $this->assertTrue(
+            str_contains(
+            file_get_contents(static::$outputDir . '/ru-hexlet-io-courses.html'),
+            static::$outputDir .
+            '/ru-hexlet-io-courses_files/' .
+            'cdn2-hexlet-io-assets-' .
+            'hexlet_logo-e99fc2b3b7c1eec88899f3af1435a39aaac6fd29d011dfe2342499c0884b7a96.png'
+            )
+        );
+    }
+
     /*public function testFuncPLWithoutNet(): void
     {
         $stub = $this->createMock(\GuzzleHttp\Client::class);
@@ -22,11 +45,6 @@ class PLTest extends TestCase
          '/ru-hexlet-io-courses.html', pageLoader('https://ru.hexlet.io/courses')
         );
     }*/
-    public function testFuncPLWithNet(): void
-    {
-        $tryLoad = pageLoader('https://ru.hexlet.io/courses', static::$outputDir);
-        $this->assertEquals(static::$outputDir . '/ru-hexlet-io-courses.html', $tryLoad);
-    }
     /*public function testBlackBox(): void
     {
         $expRes = "\nPage was successfully downloaded into " .
