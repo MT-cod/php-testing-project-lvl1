@@ -24,8 +24,7 @@ class PLTest extends TestCase
         );
         $this->assertTrue(str_contains(
             file_get_contents(static::$outputDir . '/ru-hexlet-io-courses.html'),
-            static::$outputDir .
-            '/ru-hexlet-io-courses_files/' .
+            'ru-hexlet-io-courses_files/' .
             'cdn2-hexlet-io-assets-' .
             'hexlet_logo-e99fc2b3b7c1eec88899f3af1435a39aaac6fd29d011dfe2342499c0884b7a96.png'
         ));

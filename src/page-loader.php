@@ -13,7 +13,7 @@ function fileProcessing(string $url, string $outputDir): string
 {
     $htmlAsStr = file_get_contents($url);
     $outputName = genSlugName($url);
-    $outPath = (mb_substr($outputDir, -1, 1) !== '/') ? $outputDir . '/' : $outputDir;
+    $outPath = (str_ends_with($outputDir, '/')) ? $outputDir : $outputDir . '/';
     $outputNameWithPath = $outPath . $outputName;
 //Обрабатываем наличие картинок
     $images = getImg($htmlAsStr);
@@ -22,16 +22,27 @@ function fileProcessing(string $url, string $outputDir): string
             mkdir($outputNameWithPath . '_files');
         }
         foreach ($images as $img) {
-            $newImgName = genSlugName($img);
-            $newImgNameWithPath = $outputNameWithPath . '_files/' . $newImgName;
-            if (file_put_contents($newImgNameWithPath, file($img)) === false) {
+            if (str_starts_with($img, '/')) {
+            //Если путь до картинок в html указан относительно
+                $newImgName = genSlugName($url . $img);
+                $imgRoot = $url . $img;
+            } else {
+            //Если путь до картинок в html указан с url
+                $newImgName = genSlugName($img);
+                $imgRoot = $img;
+            }
+
+            $newImgNameWithDir = $outputName . '_files/' . $newImgName;
+            $newImgNameWithRoot = $outputNameWithPath . '_files/' . $newImgName;
+            if (file_put_contents($newImgNameWithRoot, file($imgRoot)) === false) {
                 return '[Error writing file!]';
             }
-            $htmlAsStr = str_replace($img, $newImgNameWithPath, $htmlAsStr);
+            $htmlAsStrImg = str_replace($img, $newImgNameWithDir, $htmlAsStr);
         }
     }
 //Загружаем и пишем html
-    if (file_put_contents($outputNameWithPath . '.html', $htmlAsStr) !== false) {
+    $html = $htmlAsStrImg ?? $htmlAsStr;
+    if (file_put_contents($outputNameWithPath . '.html', $html) !== false) {
         return $outputNameWithPath . '.html';
     }
     return '[Error writing file!]';
