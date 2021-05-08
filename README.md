@@ -8,5 +8,5 @@
 <br>
 <a href="https://asciinema.org/a/bTcfN43EkeFPNEm6zdZtNpKH1">Скачивание страницы - asciinema</a>
 <br>
-a href="https://asciinema.org/a/8H1fPin1r4FKAHYP8FlWWuOpO">Скачивание страницы - asciinema</a>
+<a href="https://asciinema.org/a/8H1fPin1r4FKAHYP8FlWWuOpO">Скачивание изображений - asciinema</a>
 <br>
