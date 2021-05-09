@@ -19,9 +19,15 @@ class PL
         $this->outputNameWithPath = $this->outPath . $this->outputName;
     }
 
-    public function fileProcessing(): void
+    public function filesProcessing(): void
     {
-        $images = $this->getImages($this->htmlAsStr);
+        $htmlAsStrWithImgs = $this->imagesProcessing($this->getImages($this->htmlAsStr));
+        $htmlAsStrWithImgsAndScrs = $this->scriptsProcessing($this->getScripts($htmlAsStrWithImgs));
+        $htmlAsStrWithImgsAndScrsAndlinks = $this->linksProcessing($this->getLinks($htmlAsStrWithImgsAndScrs));
+        $this->writeHtml($htmlAsStrWithImgsAndScrsAndlinks);
+    }
+    public function imagesProcessing(array $images): string
+    {
         if ($images != []) {
             if (!file_exists($this->outputNameWithPath . '_files')) {
                 mkdir($this->outputNameWithPath . '_files');
@@ -40,20 +46,39 @@ class PL
                 $newImgNameWithDir = $this->outputName . '_files/' . $newImgName;
                 $newImgNameWithRoot = $this->outputNameWithPath . '_files/' . $newImgName;
                 file_put_contents($newImgNameWithRoot, file($imgRoot));
-                $htmlAsStrImg = str_replace($img, $newImgNameWithDir, $this->htmlAsStr);
+                return str_replace($img, $newImgNameWithDir, $this->htmlAsStr);
             }
         }
-//Загружаем и пишем html
-        $html = $htmlAsStrImg ?? $this->htmlAsStr;
-        file_put_contents($this->outputNameWithPath . '.html', $html);
+    }
+    public function scriptsProcessing(array $scripts): string
+    {
+
+    }
+    public function linksProcessing(array $links): string
+    {
+
     }
 
+    public function writeHtml(string $htmlAsStr): void
+    {
+        file_put_contents($this->outputNameWithPath . '.html', $htmlAsStr);
+    }
     public function getDownloadedHtmlPath(): string
     {
         return $this->outputNameWithPath . '.html';
     }
 
     public function getImages(string $htmlAsStr): array
+    {
+        $imgSearch = preg_match_all('/(?<=")[^"]+\.(png|jpg)(?=")/', $htmlAsStr, $images);
+        return ($imgSearch > 0) ? $images[0] : [];
+    }
+    public function getScripts(string $htmlAsStr): array
+    {
+        $imgSearch = preg_match_all('/(?<=")[^"]+\.(png|jpg)(?=")/', $htmlAsStr, $images);
+        return ($imgSearch > 0) ? $images[0] : [];
+    }
+    public function getLinks(string $htmlAsStr): array
     {
         $imgSearch = preg_match_all('/(?<=")[^"]+\.(png|jpg)(?=")/', $htmlAsStr, $images);
         return ($imgSearch > 0) ? $images[0] : [];
