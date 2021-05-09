@@ -23,7 +23,8 @@
             "PL\\": "tests"
         },
         "files": [
-            "src/page-loader.php"
+            "src/page-loader.php",
+            "src/PL.php"
         ]
     },
     "license": "MIT",
