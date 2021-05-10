@@ -8,30 +8,51 @@ use PHPUnit\Framework\TestCase;
 
 class PLTest extends TestCase
 {
-    private static string $outputDir = __DIR__;
+    private string $outputDir;
 
+    public function setUp(): void
+    {
+        $this->outputDir = __DIR__;
+    }
     public function testFuncPLWithNet(): void
     {
-        $tryLoad = pageLoader('https://ru.hexlet.io/courses', static::$outputDir);
-        $this->assertEquals(static::$outputDir . '/ru-hexlet-io-courses.html', $tryLoad);
+        $tryLoad = pageLoader('https://php.net', $this->outputDir);
+        $this->assertEquals($this->outputDir . '/php-net.html', $tryLoad);
 
-        $this->assertFileExists(static::$outputDir . '/ru-hexlet-io-courses_files');
-        /*$this->assertFileExists(
-            static::$outputDir .
-            '/ru-hexlet-io-courses_files/' .
-            'ru-hexlet-io-lessons.rss'
+        $this->assertFileExists($this->outputDir . '/php-net_files');
+        $this->assertFileExists(
+            $this->outputDir .
+            '/php-net_files/' .
+            'php-net--ajax.googleapis.com-ajax-libs-jquery-1.10.2-jquery.min.js'
         );
         $this->assertFileExists(
-            static::$outputDir .
-            '/ru-hexlet-io-courses_files/' .
-            'ru-hexlet-io-courses.html'
+            $this->outputDir .
+            '/php-net_files/' .
+            'php-net-images-to-top@2x.png'
+        );
+        $this->assertFileExists(
+            $this->outputDir .
+            '/php-net_files/' .
+            'www-php-net-index.php'
         );
         $this->assertTrue(str_contains(
-            file_get_contents(static::$outputDir . '/ru-hexlet-io-courses.html'),
-            'ru-hexlet-io-courses_files/' .
-            'cdn2-hexlet-io-assets-' .
-            'hexlet_logo-e99fc2b3b7c1eec88899f3af1435a39aaac6fd29d011dfe2342499c0884b7a96.png'
-        ));*/
+            file_get_contents($this->outputDir . '/php-net.html'),
+            'php-net_files/' .
+            'php-net--ajax.googleapis.com-ajax-libs-jquery-1.10.2-jquery.min.js'
+        ));
+    }
+    public function tearDown(): void
+    {
+        unlink($this->outputDir . '/php-net.html');
+        $this->recursiveRemoveDir($this->outputDir . '/php-net_files');
+    }
+    public function recursiveRemoveDir($dir): void
+    {
+        $includes = glob($dir . '/*');
+        foreach ($includes as $include) {
+            unlink($include);
+        }
+        rmdir($dir);
     }
 
     /*public function testFuncPLWithoutNet(): void
@@ -42,7 +63,7 @@ class PLTest extends TestCase
             ->method('getContents')
             ->willReturn('bla-bla-bla');
         $this->assertSame(
-        static::$outputDir .
+        $this->outputDir .
          '/ru-hexlet-io-courses.html', pageLoader('https://ru.hexlet.io/courses')
         );
     }*/

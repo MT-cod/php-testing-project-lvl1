@@ -21,41 +21,50 @@ class PL
 
     public function filesProcessing(): void
     {
-        $htmlAsStrWithImgs = $this->deepFilePrng($this->getImages($this->htmlAsStr));
-        $htmlAsStrWithImgsAndScrs = $this->deepFilePrng($this->getScripts($htmlAsStrWithImgs));
-        $htmlAsStrWithImgsAndScrsAndlinks = $this->deepFilePrng($this->getLinks($htmlAsStrWithImgsAndScrs));
+        $htmlAsStrWithImgs = $this->deepFilePsng($this->getImages($this->htmlAsStr), $this->htmlAsStr);
+        $htmlAsStrWithImgsAndScrs = $this->deepFilePsng($this->getScripts($htmlAsStrWithImgs), $htmlAsStrWithImgs);
+        $htmlAsStrWithImgsAndScrsAndlinks = $this->deepFilePsng(
+            $this->getLinks($htmlAsStrWithImgsAndScrs),
+            $htmlAsStrWithImgsAndScrs
+        );
         $this->writeHtml($htmlAsStrWithImgsAndScrsAndlinks);
     }
-    public function deepFilePrng(array $files): string
+    public function deepFilePsng(array $files, string $htmlAsStr): string
     {
         if ($files != []) {
             //Создаём каталог для хранения файлов, если не создан раньше
             if (!file_exists($this->outputNameWithPath . '_files')) {
                 mkdir($this->outputNameWithPath . '_files');
             }
+            $resultHtmlAsStr = $htmlAsStr;
             foreach ($files as $file) {
                 if (str_starts_with($file, '/')) {
                     //Если путь до файлов в html указан относительно
                     $newFileName = $this->genSlugName($this->url . $file);
                     $fileRoot = $this->url . $file;
+                    $resultHtmlAsStr = $this->writeFile($file, $newFileName, $fileRoot, $resultHtmlAsStr);
                 } else {
                     //Если путь до файлов в html указан с url
-                    if ($this->checkUrlInHost($file) === false) {
-                        //Если файл с чужого домена, то не берём его
-                        continue;
+                    if ($this->checkUrlInHost($file)) {
+                        //Если файл в нашем домене, то берём его
+                        $newFileName = $this->genSlugName($file);
+                        $fileRoot = $file;
+                        $resultHtmlAsStr = $this->writeFile($file, $newFileName, $fileRoot, $resultHtmlAsStr);
                     }
-                    $newFileName = $this->genSlugName($file);
-                    $fileRoot = $file;
                 }
-                $newFileNameWithDir = $this->outputName . '_files/' . $newFileName;
-                $newFileNameWithRoot = $this->outputNameWithPath . '_files/' . $newFileName;
-                file_put_contents($newFileNameWithRoot, file($fileRoot));
-                return str_replace($file, $newFileNameWithDir, $this->htmlAsStr);
             }
+            return $resultHtmlAsStr;
         }
-        return $this->htmlAsStr;
+        return $htmlAsStr;
     }
 
+    public function writeFile(string $file, string $newFileName, string $fileRoot, string $htmlAsStr): string
+    {
+        $newFileNameWithDir = $this->outputName . '_files/' . $newFileName;
+        $newFileNameWithRoot = $this->outputNameWithPath . '_files/' . $newFileName;
+        file_put_contents($newFileNameWithRoot, file($fileRoot));
+        return str_replace($file, $newFileNameWithDir, $htmlAsStr);
+    }
     public function writeHtml(string $htmlAsStr): void
     {
         file_put_contents($this->outputNameWithPath . '.html', $htmlAsStr);
@@ -92,6 +101,6 @@ class PL
     {
         $hostOfFile = parse_url($urlOfFile, PHP_URL_HOST);
         $host = parse_url($this->url, PHP_URL_HOST);
-        return $hostOfFile == $host;
+        return ($hostOfFile === $host || $hostOfFile === ('www.' . $host));
     }
 }
