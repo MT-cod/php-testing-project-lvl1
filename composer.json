@@ -1,11 +1,12 @@
 {
     "name": "mt-cod/php-testing-project-lvl1",
-    "version": "1.3.0",
+    "version": "1.4.0",
     "description": "hexlet php-package",
     "require": {
         "docopt/docopt": "^1.0",
         "guzzlehttp/guzzle": "^7.3",
-        "imangazaliev/didom": "^1.16"
+        "imangazaliev/didom": "^1.16",
+        "monolog/monolog": "^2.2"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",

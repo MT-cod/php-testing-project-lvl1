@@ -2,6 +2,8 @@
 
 namespace PL;
 
+use Monolog\Logger;
+
 class PL
 {
     public string $url;
@@ -9,14 +11,16 @@ class PL
     public string $outputName;
     public string $outPath;
     public string $outputNameWithPath;
+    public Logger $logger;
 
-    public function __construct(string $url, string $outputDir)
+    public function __construct(string $url, string $outputDir, Logger $logger)
     {
         $this->url = $url;
         $this->htmlAsStr = file_get_contents($url);
         $this->outputName = $this->genSlugName($url);
         $this->outPath = (str_ends_with($outputDir, '/')) ? $outputDir : $outputDir . '/';
         $this->outputNameWithPath = $this->outPath . $this->outputName;
+        $this->logger = $logger;
     }
 
     public function filesProcessing(): void
@@ -68,6 +72,7 @@ class PL
     public function writeHtml(string $htmlAsStr): void
     {
         file_put_contents($this->outputNameWithPath . '.html', $htmlAsStr);
+        $this->logger->info('Write ' . $this->outputNameWithPath . '.html');
     }
     public function getDownloadedHtmlPath(): string
     {
