@@ -13,3 +13,5 @@
 <br>
 <a href="https://asciinema.org/a/27DxJZ8EEHb2oyTlYrobOB5Yn">Скачивание остальных ресурсов - asciinema</a>
 <br>
+<a href="https://asciinema.org/a/epvQuUD8FpB8Ypx16hOHYLLc0">Логирование работы программы - asciinema</a>
+<br>
