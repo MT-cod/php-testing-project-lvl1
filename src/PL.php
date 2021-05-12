@@ -3,6 +3,7 @@
 namespace PL;
 
 use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
 class PL
 {
@@ -13,14 +14,16 @@ class PL
     public string $outputNameWithPath;
     public Logger $logger;
 
-    public function __construct(string $url, string $outputDir, Logger $logger)
+    public function __construct(string $url, string $outputDir)
     {
         $this->url = $url;
         $this->htmlAsStr = file_get_contents($url);
         $this->outputName = $this->genSlugName($url);
         $this->outPath = (str_ends_with($outputDir, '/')) ? $outputDir : $outputDir . '/';
         $this->outputNameWithPath = $this->outPath . $this->outputName;
-        $this->logger = $logger;
+        $this->logger = new Logger('pl_logger');
+        $this->logger->pushHandler(new StreamHandler($this->outPath . 'page-loader.log', Logger::DEBUG));
+        $this->logger->info('Start pageloading');
     }
 
     public function filesProcessing(): void
@@ -66,13 +69,14 @@ class PL
     {
         $newFileNameWithDir = $this->outputName . '_files/' . $newFileName;
         $newFileNameWithRoot = $this->outputNameWithPath . '_files/' . $newFileName;
-        file_put_contents($newFileNameWithRoot, file($fileRoot));
+        $putRes = file_put_contents($newFileNameWithRoot, file($fileRoot));
+        $this->logger->info("Write $newFileNameWithRoot result is [$putRes]");
         return str_replace($file, $newFileNameWithDir, $htmlAsStr);
     }
     public function writeHtml(string $htmlAsStr): void
     {
-        file_put_contents($this->outputNameWithPath . '.html', $htmlAsStr);
-        $this->logger->info('Write ' . $this->outputNameWithPath . '.html');
+        $putRes = file_put_contents($this->outputNameWithPath . '.html', $htmlAsStr);
+        $this->logger->info("Write  $this->outputNameWithPath.html result is [$putRes]");
     }
     public function getDownloadedHtmlPath(): string
     {
