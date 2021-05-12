@@ -16,14 +16,19 @@ class PL
 
     public function __construct(string $url, string $outputDir)
     {
-        $this->url = $url;
-        $this->htmlAsStr = file_get_contents($url);
-        $this->outputName = $this->genSlugName($url);
+        $this->url = (str_ends_with($url, '/')) ? mb_substr($url, 0, strlen($url) - 1) : $url;
         $this->outPath = (str_ends_with($outputDir, '/')) ? $outputDir : $outputDir . '/';
+        $this->outputName = $this->genSlugName($this->url);
         $this->outputNameWithPath = $this->outPath . $this->outputName;
         $this->logger = new Logger('pl_logger');
         $this->logger->pushHandler(new StreamHandler($this->outPath . 'page-loader.log', Logger::DEBUG));
         $this->logger->info('Start pageloading');
+
+        if (!file_get_contents($this->url)) {
+            throw new \Exception('Url incorrect!', 1);
+        } else {
+            $this->htmlAsStr = file_get_contents($this->url);
+        }
     }
 
     public function filesProcessing(): void

@@ -9,14 +9,18 @@ use PHPUnit\Framework\TestCase;
 class PLTest extends TestCase
 {
     private string $outputDir;
+    private string $url;
+    private string $unreachableAddr;
 
     public function setUp(): void
     {
         $this->outputDir = __DIR__;
+        $this->url = 'https://php.net';
+        $this->unreachableAddr = 'http://testtesttt.test';
     }
     public function testFuncPLWithNet(): void
     {
-        $tryLoad = pageLoader('https://php.net', $this->outputDir);
+        $tryLoad = pageLoader($this->url, $this->outputDir);
         $this->assertEquals($this->outputDir . '/php-net.html', $tryLoad);
 
         $this->assertFileExists($this->outputDir . '/php-net_files');
@@ -41,6 +45,13 @@ class PLTest extends TestCase
             'php-net--ajax.googleapis.com-ajax-libs-jquery-1.10.2-jquery.min.js'
         ));
     }
+
+    /*public function testExceptions()
+    {
+        $this->expectExceptionMessage('Url incorrect!');
+        pageLoader($this->unreachableAddr, $this->outputDir);
+    }*/
+
     public function tearDown(): void
     {
         unlink($this->outputDir . '/php-net.html');
