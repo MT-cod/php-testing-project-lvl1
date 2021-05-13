@@ -6,7 +6,8 @@
         "docopt/docopt": "^1.0",
         "guzzlehttp/guzzle": "^7.3",
         "imangazaliev/didom": "^1.16",
-        "monolog/monolog": "^2.2"
+        "monolog/monolog": "^2.2",
+        "ext-curl": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
@@ -25,7 +26,8 @@
         },
         "files": [
             "src/page-loader.php",
-            "src/PL.php"
+            "src/PL.php",
+            "src/Connection.php"
         ]
     },
     "license": "MIT",

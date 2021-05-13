@@ -8,7 +8,7 @@ function pageLoader(string $url, string $outputDir, string $clientClass = ''): s
     try {
         $resource = new PL($url, $outputDir);
     } catch (\Exception $e) {
-        fwrite(STDERR, "Error: {$e->getMessage()} code {$e->getCode()}");
+        fwrite(STDERR, "Error: {$e->getMessage()} code {$e->getCode()}\n");
         exit($e->getCode());
     }
     $resource->filesProcessing();

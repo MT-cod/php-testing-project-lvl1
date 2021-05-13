@@ -16,19 +16,29 @@ class PL
 
     public function __construct(string $url, string $outputDir)
     {
-        $this->url = (str_ends_with($url, '/')) ? mb_substr($url, 0, strlen($url) - 1) : $url;
         $this->outPath = (str_ends_with($outputDir, '/')) ? $outputDir : $outputDir . '/';
-        $this->outputName = $this->genSlugName($this->url);
-        $this->outputNameWithPath = $this->outPath . $this->outputName;
         $this->logger = new Logger('pl_logger');
         $this->logger->pushHandler(new StreamHandler($this->outPath . 'page-loader.log', Logger::DEBUG));
         $this->logger->info('Start pageloading');
 
-        if (!file_get_contents($this->url)) {
+        $conn = new Connection($url);
+        if (!$conn->isUrl()) {
+            throw new \Exception('Url incorrect!', 1);
+        }
+        $connHttpCode = $conn->getHttpCode();
+        if ($connHttpCode !== 200) {
+            throw new \Exception("Connection to $url returned an error [$connHttpCode]", $connHttpCode);
+        }
+        $this->url = $url;
+        $this->outputName = $this->genSlugName($this->url);
+        $this->outputNameWithPath = $this->outPath . $this->outputName;
+
+
+        /*if (@!file_get_contents($this->url)) {
             throw new \Exception('Url incorrect!', 1);
         } else {
             $this->htmlAsStr = file_get_contents($this->url);
-        }
+        }*/
     }
 
     public function filesProcessing(): void

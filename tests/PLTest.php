@@ -18,7 +18,7 @@ class PLTest extends TestCase
         $this->url = 'https://php.net';
         $this->unreachableAddr = 'http://testtesttt.test';
     }
-    public function testFuncPLWithNet(): void
+    /*public function testFuncPLWithNet(): void
     {
         $tryLoad = pageLoader($this->url, $this->outputDir);
         $this->assertEquals($this->outputDir . '/php-net.html', $tryLoad);
@@ -44,13 +44,15 @@ class PLTest extends TestCase
             'php-net_files/' .
             'php-net--ajax.googleapis.com-ajax-libs-jquery-1.10.2-jquery.min.js'
         ));
-    }
-
-    /*public function testExceptions()
-    {
-        $this->expectExceptionMessage('Url incorrect!');
-        pageLoader($this->unreachableAddr, $this->outputDir);
     }*/
+
+    public function testExceptions()
+    {
+        $this->expectExceptionMessage(
+            'Error: Connection to http://testtesttt.test returned an error [0] code 0'
+        );
+        pageLoader($this->unreachableAddr, $this->outputDir);
+    }
 
     public function tearDown(): void
     {
