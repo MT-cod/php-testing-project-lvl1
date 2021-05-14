@@ -46,18 +46,19 @@ class PLTest extends TestCase
         ));
     }*/
 
-    public function testExceptions()
+    public function testExceptionsWithUnreachableAddr()
     {
-        $this->expectExceptionMessage(
-            'Error: Connection to http://testtesttt.test returned an error [0] code 0'
-        );
-        pageLoader($this->unreachableAddr, $this->outputDir);
+        $this->expectExceptionCode(0);
+        $this->expectExceptionMessage("Connection to $this->unreachableAddr returned an error [0]");
+        new PL($this->unreachableAddr, $this->outputDir);
     }
 
     public function tearDown(): void
     {
-        unlink($this->outputDir . '/php-net.html');
-        $this->recursiveRemoveDir($this->outputDir . '/php-net_files');
+        if (file_exists($this->outputDir . '/php-net.html')) {
+            unlink($this->outputDir . '/php-net.html');
+            $this->recursiveRemoveDir($this->outputDir . '/php-net_files');
+        }
     }
     public function recursiveRemoveDir($dir): void
     {

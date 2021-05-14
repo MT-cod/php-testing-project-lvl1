@@ -23,22 +23,24 @@ class PL
 
         $conn = new Connection($url);
         if (!$conn->isUrl()) {
+            $this->logger->error('Url incorrect!');
             throw new \Exception('Url incorrect!', 1);
         }
         $connHttpCode = $conn->getHttpCode();
         if ($connHttpCode !== 200) {
+            $this->logger->error("Connection to $url returned an error [$connHttpCode]");
             throw new \Exception("Connection to $url returned an error [$connHttpCode]", $connHttpCode);
         }
         $this->url = $url;
-        $this->outputName = $this->genSlugName($this->url);
-        $this->outputNameWithPath = $this->outPath . $this->outputName;
-
-
-        /*if (@!file_get_contents($this->url)) {
-            throw new \Exception('Url incorrect!', 1);
+        if (@!file_get_contents($this->url)) {
+            $this->logger->error("Failed to load $url.", 1);
+            throw new \Exception("Failed to load $url.", 1);
         } else {
             $this->htmlAsStr = file_get_contents($this->url);
-        }*/
+        }
+
+        $this->outputName = $this->genSlugName($this->url);
+        $this->outputNameWithPath = $this->outPath . $this->outputName;
     }
 
     public function filesProcessing(): void
