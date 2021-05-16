@@ -10,8 +10,7 @@ function pageLoader(string $url, string $outputDir, string $clientClass = ''): s
         $resource->filesProcessing();
         return $resource->getDownloadedHtmlPath();
     } catch (\Exception $e) {
-        fwrite(STDERR, "Error: {$e->getMessage()} code {$e->getCode()}\n");
-        /*exit($e->getCode());*/
+        fwrite(STDERR, $e->getMessage());
+        exit($e->getCode());
     }
-    return null;
 }

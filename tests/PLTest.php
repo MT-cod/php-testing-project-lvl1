@@ -18,7 +18,24 @@ class PLTest extends TestCase
         $this->url = 'https://php.net';
         $this->unreachableAddr = 'http://testtesttt.test';
     }
-    /*public function testFuncPLWithNet(): void
+
+    public function testParsingHtml(): void
+    {
+        $html = file_get_contents($this->outputDir . '/fixtures/test.html');
+        $images = ["/assets/professions/php.png"];
+        $scripts = ["https://js.stripe.com/v3/", "https://ru.hexlet.io/packs/js/runtime.js"];
+        $links = [
+            "https://cdn2.hexlet.io/assets/menu.css",
+            "/assets/application.css",
+            "/courses"
+        ];
+        $stub = new PL($this->unreachableAddr, $this->outputDir);
+        $this->assertEquals($images, $stub->getImages($html));
+        $this->assertEquals($scripts, $stub->getScripts($html));
+        $this->assertEquals($links, $stub->getLinks($html));
+    }
+
+    public function testBlackBoxFuncPLWithNet(): void
     {
         $tryLoad = pageLoader($this->url, $this->outputDir);
         $this->assertEquals($this->outputDir . '/php-net.html', $tryLoad);
@@ -44,13 +61,40 @@ class PLTest extends TestCase
             'php-net_files/' .
             'php-net--ajax.googleapis.com-ajax-libs-jquery-1.10.2-jquery.min.js'
         ));
-    }*/
+    }
 
-    public function testExceptionsWithUnreachableAddr()
+    public function testConnectionMethods(): void
+    {
+        $conn1 = new Connection('https://example.com');
+        $conn2 = new Connection('bla-bla-bla');
+        $conn3 = new Connection($this->unreachableAddr);
+        $this->assertTrue($conn1->isUrl());
+        $this->assertFalse($conn2->isUrl());
+        $this->assertEquals([200, 'OK'], $conn1->getHttpCode());
+        $this->assertEquals(0, $conn3->getHttpCode()[0]);
+    }
+
+    //Тесты исключений
+    public function testExceptionsRetCode0()
     {
         $this->expectExceptionCode(0);
-        $this->expectExceptionMessage("Connection to $this->unreachableAddr returned an error [0]");
-        new PL($this->unreachableAddr, $this->outputDir);
+        $test = new PL($this->unreachableAddr, $this->outputDir);
+        $test->filesProcessing();
+    }
+    public function testExceptionsUnreachableAddr()
+    {
+        $this->expectExceptionMessage(
+            "Failed to load $this->unreachableAddr. Returned an error \"Unreachable address\" code \"0\""
+        );
+        $test = new PL($this->unreachableAddr, $this->outputDir);
+        $test->filesProcessing();
+    }
+    public function testExceptionsWriteData()
+    {
+        $this->expectExceptionMessage(
+            "Failed to write data into \"/testsefewf/\""
+        );
+        new PL($this->url, '/testsefewf');
     }
 
     public function tearDown(): void
@@ -69,18 +113,6 @@ class PLTest extends TestCase
         rmdir($dir);
     }
 
-    /*public function testFuncPLWithoutNet(): void
-    {
-        $stub = $this->createMock(\GuzzleHttp\Client::class);
-        $stub->method('get')
-            ->method('getBody')
-            ->method('getContents')
-            ->willReturn('bla-bla-bla');
-        $this->assertSame(
-        $this->outputDir .
-         '/ru-hexlet-io-courses.html', pageLoader('https://ru.hexlet.io/courses')
-        );
-    }*/
     /*public function testBlackBox(): void
     {
         $expRes = "\nPage was successfully downloaded into " .
