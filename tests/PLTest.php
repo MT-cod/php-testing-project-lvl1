@@ -2,7 +2,7 @@
 
 //Модуль тестирования парсингов файлов в массивы
 
-namespace PL;
+namespace Downloader\Downloader;
 
 use PHPUnit\Framework\TestCase;
 
@@ -37,7 +37,7 @@ class PLTest extends TestCase
 
     public function testBlackBoxFuncPLWithNet(): void
     {
-        $tryLoad = pageLoader($this->url, $this->outputDir);
+        $tryLoad = downloadPage($this->url, $this->outputDir);
         $this->assertEquals($this->outputDir . '/php-net.html', $tryLoad);
 
         $this->assertFileExists($this->outputDir . '/php-net_files');

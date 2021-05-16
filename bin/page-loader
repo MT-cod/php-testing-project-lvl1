@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-namespace PL;
+namespace Downloader\Downloader;
 
 $autoloadPath1 = __DIR__ . '/../../../autoload.php';
 $autoloadPath2 = __DIR__ . '/../vendor/autoload.php';
@@ -34,4 +34,4 @@ $url = $startingParams['<url>'];
 //если не задан, то подставляем директорию запуска программы
 $outputDir = $startingParams['--output'] ?? __DIR__;
 
-echo("\nPage was successfully downloaded into " . pageLoader($url, $outputDir) . "\n");
+echo("\nPage was successfully downloaded into " . downloadPage($url, $outputDir) . "\n");

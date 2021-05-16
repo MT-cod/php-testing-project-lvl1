@@ -1,9 +1,9 @@
 <?php
 
-namespace PL;
+namespace Downloader\Downloader;
 
 //Головная функция
-function pageLoader(string $url, string $outputDir, string $clientClass = ''): string | null
+function downloadPage(string $url, string $outputDir, string $clientClass = ''): string | null
 {
     try {
         $resource = new PL($url, $outputDir);

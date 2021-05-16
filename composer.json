@@ -4,8 +4,6 @@
     "description": "hexlet php-package",
     "require": {
         "docopt/docopt": "^1.0",
-        "guzzlehttp/guzzle": "^7.3",
-        "imangazaliev/didom": "^1.16",
         "monolog/monolog": "^2.2",
         "ext-curl": "*"
     },
@@ -22,7 +20,7 @@
     },
     "autoload": {
         "psr-4": {
-            "PL\\": "tests"
+            "Downloader\\Downloader\\": "tests"
         },
         "files": [
             "src/page-loader.php",

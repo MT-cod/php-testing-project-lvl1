@@ -1,6 +1,6 @@
 <?php
 
-namespace PL;
+namespace Downloader\Downloader;
 
 class Connection
 {

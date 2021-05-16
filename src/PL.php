@@ -1,6 +1,6 @@
 <?php
 
-namespace PL;
+namespace Downloader\Downloader;
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
