@@ -84,7 +84,7 @@ class PLTest extends TestCase
     public function testExceptionsUnreachableAddr()
     {
         $this->expectExceptionMessage(
-            "Failed to load $this->unreachableAddr. Returned an error \"Unreachable address\" code \"0\""
+            "Failed to load $this->unreachableAddr. Returned an error \"Unreachable address\" code \"0\"\n"
         );
         $test = new PL($this->unreachableAddr, $this->outputDir);
         $test->filesProcessing();
@@ -92,11 +92,12 @@ class PLTest extends TestCase
     public function testExceptionsWriteData()
     {
         $this->expectExceptionMessage(
-            "Failed to write data into \"/testsefewf/\""
+            "Failed to write data into \"/testsefewf/\"\n"
         );
         new PL($this->url, '/testsefewf');
     }
 
+    //Подчищаем после тестов
     public function tearDown(): void
     {
         if (file_exists($this->outputDir . '/php-net.html')) {

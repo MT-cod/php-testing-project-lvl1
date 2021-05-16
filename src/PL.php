@@ -42,7 +42,15 @@ class PL
         if ($files != []) {
             //Создаём каталог для хранения файлов, если не создан раньше
             if (!file_exists($this->outputNameWithPath . '_files')) {
-                mkdir($this->outputNameWithPath . '_files');
+                if (!@mkdir($this->outputNameWithPath . '_files')) {
+                    $this->logger->error(
+                        "Failed to create dir \"$this->outputNameWithPath" . "_files\""
+                    );
+                    fwrite(
+                        STDERR,
+                        "Failed to create dir \"$this->outputNameWithPath" . "_files\"\n"
+                    );
+                }
             }
             $resultHtmlAsStr = $htmlAsStr;
             foreach ($files as $file) {
@@ -71,7 +79,7 @@ class PL
         $conn = new Connection($this->url);
         if (!$conn->isUrl()) {
             $this->logger->error('Url incorrect!');
-            throw new \Exception('Url incorrect!', 1);
+            throw new \Exception("Url incorrect!\n", 1);
         }
         $connHttpCode = $conn->getHttpCode();
         $this->htmlAsStr = @file_get_contents($this->url);
@@ -80,7 +88,7 @@ class PL
                 "Failed to load $this->url. Returned an error \"$connHttpCode[1]\" code \"$connHttpCode[0]\""
             );
             throw new \Exception(
-                "Failed to load $this->url. Returned an error \"$connHttpCode[1]\" code \"$connHttpCode[0]\"",
+                "Failed to load $this->url. Returned an error \"$connHttpCode[1]\" code \"$connHttpCode[0]\"\n",
                 $connHttpCode[0]
             );
         }
@@ -91,7 +99,7 @@ class PL
         $testWriteFile = @fopen($outputDir . 'test', 'w');
         if (!$testWriteFile) {
             throw new \Exception(
-                "Failed to write data into \"$outputDir\"",
+                "Failed to write data into \"$outputDir\"\n",
                 1
             );
         }
@@ -100,14 +108,34 @@ class PL
     public function writeHtml(string $htmlAsStr): void
     {
         $putRes = @file_put_contents($this->outputNameWithPath . '.html', $htmlAsStr);
-        $this->logger->info("Write  $this->outputNameWithPath.html result is [$putRes]");
+        if (!$putRes) {
+            $this->logger->error("Failed to write \"$this->outputNameWithPath.html\"");
+            throw new \Exception(
+                "Failed to write \"$this->outputNameWithPath.html\"\n",
+                1
+            );
+        }
     }
     public function writeFile(string $file, string $newFileName, string $fileRoot, string $htmlAsStr): string
     {
         $newFileNameWithDir = $this->outputName . '_files/' . $newFileName;
         $newFileNameWithRoot = $this->outputNameWithPath . '_files/' . $newFileName;
-        $putRes = file_put_contents($newFileNameWithRoot, file($fileRoot));
-        $this->logger->info("Write $newFileNameWithRoot result is [$putRes]");
+        $conn = new Connection($fileRoot);
+        $connHttpCode = $conn->getHttpCode();
+        $putRes = @file_put_contents($newFileNameWithRoot, file($fileRoot));
+        if (!$putRes) {
+            $this->logger->error(
+                "Failed to write \"$newFileNameWithRoot\".
+ Returned an error \"$connHttpCode[1]\" code \"$connHttpCode[0]\""
+            );
+            fwrite(
+                STDERR,
+                "Failed to write \"$newFileNameWithRoot\".
+ Returned an error \"$connHttpCode[1]\" code \"$connHttpCode[0]\"\n"
+            );
+        } else {
+            $this->logger->info("Write $newFileNameWithRoot. Size [$putRes]");
+        }
         return str_replace($file, $newFileNameWithDir, $htmlAsStr);
     }
 
