@@ -15,3 +15,5 @@
 <br>
 <a href="https://asciinema.org/a/epvQuUD8FpB8Ypx16hOHYLLc0">Логирование работы программы - asciinema</a>
 <br>
+<a href="https://asciinema.org/a/iqCu90Ejdj4XUehh20a6vWjmI">Обработка ошибок - asciinema</a>
+<br>
