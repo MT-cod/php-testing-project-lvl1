@@ -53,7 +53,7 @@ class PL
                 }
             }
             $resultHtmlAsStr = $htmlAsStr;
-            array_walk($files, function ($file) use (&$resultHtmlAsStr) {
+            array_walk($files, function ($file) use (&$resultHtmlAsStr): void {
                 if (str_starts_with($file, '/')) {
                     //Если путь до файлов в html указан относительно
                     $newFileName = $this->genSlugName($this->url . $file);
