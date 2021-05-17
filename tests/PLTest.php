@@ -57,7 +57,7 @@ class PLTest extends TestCase
             'www-php-net-index.php'
         );
         $this->assertTrue(str_contains(
-            file_get_contents($this->outputDir . '/php-net.html'),
+            (string) file_get_contents($this->outputDir . '/php-net.html'),
             'php-net_files/' .
             'php-net--ajax.googleapis.com-ajax-libs-jquery-1.10.2-jquery.min.js'
         ));
@@ -75,13 +75,13 @@ class PLTest extends TestCase
     }
 
     //Тесты исключений
-    public function testExceptionsRetCode0()
+    public function testExceptionsRetCode0(): void
     {
         $this->expectExceptionCode(0);
         $test = new PL($this->unreachableAddr, $this->outputDir);
         $test->filesProcessing();
     }
-    public function testExceptionsUnreachableAddr()
+    public function testExceptionsUnreachableAddr(): void
     {
         $this->expectExceptionMessage(
             "Failed to load $this->unreachableAddr. Returned an error \"Unreachable address\" code \"0\"\n"
@@ -89,7 +89,7 @@ class PLTest extends TestCase
         $test = new PL($this->unreachableAddr, $this->outputDir);
         $test->filesProcessing();
     }
-    public function testExceptionsWriteData()
+    public function testExceptionsWriteData(): void
     {
         $this->expectExceptionMessage(
             "Failed to write data into \"/testsefewf/\"\n"
@@ -108,9 +108,7 @@ class PLTest extends TestCase
     public function recursiveRemoveDir($dir): void
     {
         $includes = glob($dir . '/*');
-        foreach ($includes as $include) {
-            unlink($include);
-        }
+        array_walk($includes, fn($include)=>unlink($include));
         rmdir($dir);
     }
 
