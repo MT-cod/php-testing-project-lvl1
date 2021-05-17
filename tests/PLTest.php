@@ -21,7 +21,7 @@ class PLTest extends TestCase
 
     public function testParsingHtml(): void
     {
-        $html = file_get_contents($this->outputDir . '/fixtures/test.html');
+        $html = (string) file_get_contents($this->outputDir . '/fixtures/test.html');
         $images = ["/assets/professions/php.png"];
         $scripts = ["https://js.stripe.com/v3/", "https://ru.hexlet.io/packs/js/runtime.js"];
         $links = [
