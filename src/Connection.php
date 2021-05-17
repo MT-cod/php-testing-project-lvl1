@@ -102,7 +102,7 @@ class Connection
     {
         $this->url = (str_ends_with($url, '/')) ? mb_substr($url, 0, strlen($url) - 1) : $url;
     }
-    public function isUrl(): string | bool
+    public function isUrl(): string | false
     {
         // Проверка правильности URL
         return !!filter_var($this->url, FILTER_VALIDATE_URL);
@@ -124,7 +124,7 @@ class Connection
             'accept-language: ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
         );
         $request = curl_init($this->url);
-        if (!$request) {
+        if ($request === false) {
             throw new \Exception("Connection error!\n", 1);
         }
         curl_setopt($request, CURLOPT_COOKIEFILE, __DIR__ . '/cookie.txt');
