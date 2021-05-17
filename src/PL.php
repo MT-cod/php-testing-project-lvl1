@@ -165,8 +165,8 @@ class PL
     {
         $host = (string) parse_url($url, PHP_URL_HOST);
         $path = (string) parse_url($url, PHP_URL_PATH);
-        $hostParts = is_array(explode('.', $host)) ? explode('.', $host) : [];
-        $pathParts = is_array(explode('/', $path)) ? explode('/', $path) : [];
+        $hostParts = explode('.', $host);
+        $pathParts = explode('/', $path);
         return implode('-', $hostParts) . implode('-', $pathParts);
     }
 
