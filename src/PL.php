@@ -53,7 +53,7 @@ class PL
                 }
             }
             $resultHtmlAsStr = $htmlAsStr;
-            foreach ($files as $file) {
+            array_walk($files, function ($file) use (&$resultHtmlAsStr) {
                 if (str_starts_with($file, '/')) {
                     //Если путь до файлов в html указан относительно
                     $newFileName = $this->genSlugName($this->url . $file);
@@ -68,7 +68,7 @@ class PL
                         $resultHtmlAsStr = $this->writeFile($file, $newFileName, $fileRoot, $resultHtmlAsStr);
                     }
                 }
-            }
+            });
             return $resultHtmlAsStr;
         }
         return $htmlAsStr;
