@@ -102,10 +102,10 @@ class Connection
     {
         $this->url = (str_ends_with($url, '/')) ? mb_substr($url, 0, strlen($url) - 1) : $url;
     }
-    public function isUrl(): string | false
+    public function isUrl(): bool
     {
         // Проверка правильности URL
-        return !!filter_var($this->url, FILTER_VALIDATE_URL);
+        return (filter_var($this->url, FILTER_VALIDATE_URL) !== false);
     }
     public function getHttpCode(): array
     {

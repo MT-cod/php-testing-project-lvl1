@@ -77,13 +77,13 @@ class PL
     public function getHtmlData(): void
     {
         $conn = new Connection($this->url);
-        if (!$conn->isUrl()) {
+        if ($conn->isUrl() === false) {
             $this->logger->error('Url incorrect!');
             throw new \Exception("Url incorrect!\n", 1);
         }
         $connHttpCode = $conn->getHttpCode();
         $this->htmlAsStr = @file_get_contents($this->url);
-        if (!$this->htmlAsStr) {
+        if ($this->htmlAsStr === false) {
             $this->logger->error(
                 "Failed to load $this->url. Returned an error \"$connHttpCode[1]\" code \"$connHttpCode[0]\""
             );
@@ -97,7 +97,7 @@ class PL
     public function testWriteFile(string $url, string $outputDir): void
     {
         $testWriteFile = @fopen($outputDir . 'test', 'w');
-        if (!$testWriteFile) {
+        if ($testWriteFile === false) {
             throw new \Exception(
                 "Failed to write data into \"$outputDir\"\n",
                 1
@@ -108,7 +108,7 @@ class PL
     public function writeHtml(string $htmlAsStr): void
     {
         $putRes = @file_put_contents($this->outputNameWithPath . '.html', $htmlAsStr);
-        if (!$putRes) {
+        if ($putRes === false) {
             $this->logger->error("Failed to write \"$this->outputNameWithPath.html\"");
             throw new \Exception(
                 "Failed to write \"$this->outputNameWithPath.html\"\n",
@@ -123,7 +123,7 @@ class PL
         $conn = new Connection($fileRoot);
         $connHttpCode = $conn->getHttpCode();
         $putRes = @file_put_contents($newFileNameWithRoot, file($fileRoot));
-        if (!$putRes) {
+        if ($putRes === false) {
             $this->logger->error(
                 "Failed to write \"$newFileNameWithRoot\".
  Returned an error \"$connHttpCode[1]\" code \"$connHttpCode[0]\""
@@ -164,7 +164,8 @@ class PL
     {
         $hostParts = explode('.', parse_url($url, PHP_URL_HOST));
         $pathParts = explode('/', parse_url($url, PHP_URL_PATH));
-        return implode('-', $hostParts) . implode('-', $pathParts);
+        $slugName = implode('-', $hostParts) . implode('-', $pathParts);
+        return ($slugName !== null || $slugName !== false) ? $slugName : '';
     }
 
     public function checkUrlInHost(string $urlOfFile): bool
