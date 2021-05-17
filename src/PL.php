@@ -83,7 +83,7 @@ class PL
         }
         $connHttpCode = $conn->getHttpCode();
         $this->htmlAsStr = @file_get_contents($this->url);
-        if ($this->htmlAsStr === false) {
+        if ($this->htmlAsStr === false || $this->htmlAsStr === '') {
             $this->logger->error(
                 "Failed to load $this->url. Returned an error \"$connHttpCode[1]\" code \"$connHttpCode[0]\""
             );

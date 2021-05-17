@@ -125,7 +125,7 @@ class Connection
         );
         $request = curl_init($this->url);
         if ($request === false) {
-            throw new \Exception("Connection error!\n", 1);
+            return [0, ''];
         }
         curl_setopt($request, CURLOPT_COOKIEFILE, __DIR__ . '/cookie.txt');
         curl_setopt($request, CURLOPT_COOKIEJAR, __DIR__ . '/cookie.txt');
