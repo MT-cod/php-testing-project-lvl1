@@ -8,7 +8,7 @@ use Monolog\Handler\StreamHandler;
 class PL
 {
     public string $url;
-    public string | false $htmlAsStr;
+    public string $htmlAsStr;
     public string $outputName;
     public string $outPath;
     public string $outputNameWithPath;
@@ -82,8 +82,8 @@ class PL
             throw new \Exception("Url incorrect!\n", 1);
         }
         $connHttpCode = $conn->getHttpCode();
-        $this->htmlAsStr = @file_get_contents($this->url);
-        if ($this->htmlAsStr === false || $this->htmlAsStr === '') {
+        $htmlAsStr = @file_get_contents($this->url);
+        if ($htmlAsStr === false || $htmlAsStr === '') {
             $this->logger->error(
                 "Failed to load $this->url. Returned an error \"$connHttpCode[1]\" code \"$connHttpCode[0]\""
             );
@@ -92,6 +92,7 @@ class PL
                 $connHttpCode[0]
             );
         }
+        $this->htmlAsStr = $htmlAsStr;
     }
 
     public function testWriteFile(string $url, string $outputDir): void
@@ -164,8 +165,8 @@ class PL
     {
         $host = (string) parse_url($url, PHP_URL_HOST);
         $path = (string) parse_url($url, PHP_URL_PATH);
-        $hostParts = (array) explode('.', $host);
-        $pathParts = (array) explode('/', $path);
+        $hostParts = is_array(explode('.', $host)) ? explode('.', $host) : [];
+        $pathParts = is_array(explode('/', $path)) ? explode('/', $path) : [];
         return implode('-', $hostParts) . implode('-', $pathParts);
     }
 
