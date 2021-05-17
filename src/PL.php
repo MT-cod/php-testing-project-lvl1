@@ -8,7 +8,7 @@ use Monolog\Handler\StreamHandler;
 class PL
 {
     public string $url;
-    public string $htmlAsStr;
+    public string | false $htmlAsStr;
     public string $outputName;
     public string $outPath;
     public string $outputNameWithPath;
@@ -22,13 +22,13 @@ class PL
         $this->logger->pushHandler(new StreamHandler($this->outPath . 'page-loader.log', Logger::DEBUG));
         $this->logger->info('Start pageloading');
         $this->url = $url;
-        $this->outputName = $this->genSlugName($this->url);
-        $this->outputNameWithPath = $this->outPath . $this->outputName;
     }
 
     public function filesProcessing(): void
     {
         $this->getHtmlData();
+        $this->outputName = $this->genSlugName($this->url);
+        $this->outputNameWithPath = $this->outPath . $this->outputName;
         $htmlAsStrWithImgs = $this->deepFilePsng($this->getImages($this->htmlAsStr), $this->htmlAsStr);
         $htmlAsStrWithImgsAndScrs = $this->deepFilePsng($this->getScripts($htmlAsStrWithImgs), $htmlAsStrWithImgs);
         $htmlAsStrWithImgsAndScrsAndlinks = $this->deepFilePsng(
@@ -162,10 +162,11 @@ class PL
 
     public function genSlugName(string $url): string
     {
-        $hostParts = explode('.', parse_url($url, PHP_URL_HOST));
-        $pathParts = explode('/', parse_url($url, PHP_URL_PATH));
-        $slugName = implode('-', $hostParts) . implode('-', $pathParts);
-        return ($slugName !== null || $slugName !== false) ? $slugName : '';
+        $host = (string) parse_url($url, PHP_URL_HOST);
+        $path = (string) parse_url($url, PHP_URL_PATH);
+        $hostParts = (array) explode('.', $host);
+        $pathParts = (array) explode('/', $path);
+        return implode('-', $hostParts) . implode('-', $pathParts);
     }
 
     public function checkUrlInHost(string $urlOfFile): bool
