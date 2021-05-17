@@ -108,7 +108,9 @@ class PLTest extends TestCase
     public function recursiveRemoveDir($dir): void
     {
         $includes = glob($dir . '/*');
-        array_walk($includes, fn($include)=>unlink($include));
+        if (is_array($includes)) {
+            array_walk($includes, fn($include)=>unlink($include));
+        }
         rmdir($dir);
     }
 
